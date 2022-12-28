@@ -4,6 +4,7 @@ import { StyleSheet, SafeAreaView, View, Text, FlatList, TouchableOpacity } from
 import { getCalendarColumns, getDayColor, getDayText } from './src/utils/calendar';
 import { SimpleLineIcons } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import useCalendar from './src/hooks/useCalendar';
 
 const columnSize = 35;
 
@@ -23,7 +24,7 @@ const Column = ({
         justifyContent: "center", 
         alignItems: "center",
         backgroundColor: isSelected ? "#c2c2c250" : "transparent",
-        borderRadius: "50%"
+        borderRadius: columnSize / 2
       }}
       onPress={onPress}
       disabled={disabled}
@@ -43,23 +44,21 @@ const ArrowButton = ({ direction, onPress }) => {
 
 export default function App() {
   const now = dayjs();
-  const [selectedDate, setSelectedDate] = useState(now);
+  const {
+    selectedDate,
+    setSelectedDate,
+    isDatePickerVisible,
+    showDatePicker,
+    hideDatePicker,
+    handleConfirm,
+    subtract1Month,
+    add1Month,
+  } = useCalendar(now);
+  
   const columns = getCalendarColumns(selectedDate);
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
-  const showDatePicker = () => {
-    setDatePickerVisible(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisible(false);
-  };
-
-  const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
-    setSelectedDate(dayjs(date));
-    hideDatePicker();
-  };
+  const onPressLeftArrow = subtract1Month;
+  const onPressRightArrow = add1Month;
 
   const ListHeaderComponent = () => {
     const currentDateText = dayjs(selectedDate).format("YYYY.MM.DD");
@@ -68,11 +67,11 @@ export default function App() {
 
       {/* < YYYY.MM.DD > */}
         <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-          <ArrowButton direction="left" onPress={() => {}} />
+          <ArrowButton direction="left" onPress={onPressLeftArrow} />
           <TouchableOpacity onPress={showDatePicker}>
             <Text style={{ fontSize: 20, color: "#404040" }}>{currentDateText}</Text>
           </TouchableOpacity>
-          <ArrowButton direction="right" onPress={() => {}} />
+          <ArrowButton direction="right" onPress={onPressRightArrow} />
         </View>
 
       {/* 일 ~ 토 */}
@@ -111,10 +110,6 @@ export default function App() {
       />
     )
   };
-
-  useEffect(() => {
-    console.log(dayjs(selectedDate).format("YYYY.MM.DD"));
-  }, [selectedDate]);
 
   return (
     <SafeAreaView style={styles.container}>
