@@ -2,24 +2,42 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 
 const initialTodoList = [
-  {
-    id: 1,
-    content: "운동하기",
-    date: dayjs(),
-    isDone: true,
-  },
-  {
-    id: 2,
-    content: "공부하기",
-    date: dayjs(),
-    isDone: false,
-  },
-  {
-    id: 3,
-    content: "RN 강의 수강하기",
-    date: dayjs(),
-    isDone: true,
-  }
+  // {
+  //   id: 1,
+  //   content: "운동하기",
+  //   date: dayjs("2022-12-01"),
+  //   isDone: true,
+  // },
+  // {
+  //   id: 2,
+  //   content: "공부하기",
+  //   date: dayjs("2022.12.05"),
+  //   isDone: false,
+  // },
+  // {
+  //   id: 3,
+  //   content: "RN 강의 수강하기",
+  //   date: dayjs("2022.12.05"),
+  //   isDone: true,
+  // },
+  // {
+  //   id: 4,
+  //   content: "미니언즈 괴롭히기",
+  //   date: dayjs("2022.12.28"),
+  //   isDone: true,
+  // },
+  // {
+  //   id: 5,
+  //   content: "물 엎지르기",
+  //   date: dayjs("2022.12.28"),
+  //   isDone: false,
+  // },
+  // {
+  //   id: 6,
+  //   content: "풍선껌 불기",
+  //   date: dayjs("2022.12.28"),
+  //   isDone: true,
+  // }
 ]
 
 export default function useTodoList(selectedDate) {
@@ -60,8 +78,14 @@ export default function useTodoList(selectedDate) {
 
   const resetInput = () => setInput("");
 
+  const filteredTodoList = todoList.filter(todo => {
+    const isSameDate = dayjs(todo.date).isSame(selectedDate, 'date');
+    return isSameDate;
+  })
+
   return {
     todoList,
+    filteredTodoList,
     input,
     setInput,
     addTodo,

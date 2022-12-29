@@ -13,6 +13,7 @@ const Column = ({
   disabled,
   onPress,
   isSelected,
+  hasTodo,
 }) => {
   return (
     <TouchableOpacity 
@@ -27,7 +28,7 @@ const Column = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={{ color, opacity }}>{text}</Text>
+      <Text style={{ color, opacity, fontWeight: hasTodo ? "bold" : "normal" }}>{text}</Text>
     </TouchableOpacity>
   )
 };
@@ -94,6 +95,7 @@ export default function Calendar({
     const color = getDayColor(day);
     const isCurrentMonth = dayjs(date).isSame(selectedDate, "month");
     const isSelected = dayjs(date).isSame(selectedDate, "date");
+    const hasTodo = todoList.find(todo => dayjs(todo.date).isSame(date, 'date'));
 
     const onPress = () => onPressDate(date);
 
@@ -104,6 +106,7 @@ export default function Calendar({
         opacity={isCurrentMonth ? 1 : 0.4} 
         onPress={onPress}
         isSelected={isSelected}
+        hasTodo={hasTodo}
       />
     )
   };
